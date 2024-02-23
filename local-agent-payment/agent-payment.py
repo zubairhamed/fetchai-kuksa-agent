@@ -94,7 +94,6 @@ async def subscribe():
                 print("Incoming message: " + update.entry.value.value.values[0])
                 if update.entry.value is not None:
                     frags = parseInbound(update.entry.value.value.values[0])
-                    print(f"koptan: {frags}")
                     
                     if isinstance(frags, str):
                         print(f"Unexpected or invalid content returned. Ignoring content: {frags}")
@@ -114,6 +113,9 @@ def parseInbound(val):
 
     if len(frags) != 6:
         return "Unexpected parameters encountered. Expected 6"
+
+    if frags[0] != ">>>":
+        return "Unexpected marker encountered. Expecting '>>>'"
 
     try:
         float(frags[4])
