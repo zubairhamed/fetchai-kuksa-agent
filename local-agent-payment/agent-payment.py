@@ -1,7 +1,7 @@
 '''
 MIT License
 
-Copyright (c) 2024 Mohammad Zubair, AlKoptan
+Copyright (c) 2024 Mohammad Zubair, Abdulrahman AlKoptan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,11 +40,15 @@ import calendar
 import time
 from datetime import datetime
 
+from web3 import Web3, AsyncWeb3
+
 init(autoreset=True)
 
-DATABROKER_ADDRESS = "localhost"
+DATABROKER_ADDRESS = "40.114.167.144"
 DATABROKER_PORT = 55555
-PAYMENT_PATH = "Vehicle.VehicleIdentification.OptionalExtras"   # VSS Path co-opted for payment
+PAYMENT_PATH = "Vehicle.VehicleIdentification.VehicleSpecialUsage"   # VSS Path co-opted for payment
+BLOCKCHAIN_ADDRESS = "ws://158.177.1.17:8546"
+
 
 vssClient = VSSClient(DATABROKER_ADDRESS, DATABROKER_PORT) 
 
@@ -56,11 +60,12 @@ What code does:
 - handlePayment will be called 
 
 
-Data is expected to come in from Vehicle.VehicleIdentification.OptionalExtras
+Data is expected to come in from Vehicle.VehicleIdentification.VehicleSpecialUsage 
 Format:
-Inbound >>>|TS|ID<str>|GOODS<str>|AMOUNT
+Inbound >>>|TS|ID<str>|Tx-Type<str>|Value<str>
 for example:
->>>|2024-02-21-09:23:45|DriverABC|Petrol Fuel Type 48|223.56
+>>>|2024-02-21-09:23:45|DriverABC|Fuel|223.56 (Fuel is the goods, 223.56 is the payment amount)
+>>>|2024-02-21-09:23:45|DriverABC|Parking|60  (Parking is the goods, 60 is the parking duration in minutes)
 
 Outbound <<<|TS|transactionid|message
 example: <<<|2024-02-21-09:23:45|TX123456|Transaction Complete. Payment has been made
@@ -106,9 +111,8 @@ def parseInbound(val):
     if frags[0] == "<<<":
         return "Ignoring outbound message"
 
-    if len(frags) != 5:
-        return "Unexpected parameters encountered. Expected 5"
-
+    if len(frags) != 6:
+        return "Unexpected parameters encountered. Expected 6"
 
     if frags[0] != ">>>":
         return "Unexpected marker encountered. Expecting '>>>'"
@@ -124,7 +128,9 @@ async def handlePayment(ts, identity, goods, paymentAmount):
     print(f"handlePayment {ts} {identity} {goods} {paymentAmount}")
     """ Handle SmartContract Payments and then write to databroker the results """
     
-    # KOPTAN TODO HERE    
+    w3 = Web3(Web3.WebsocketProvider(BLOCKCHAIN_ADDRESS))
+    print(f"Connected to blockchain: {w3.is_connected()}")
+
     returnValue = f"<<<|<TimeStamp>|<ReturnMessage>"                    
     try:
         async with vssClient:
