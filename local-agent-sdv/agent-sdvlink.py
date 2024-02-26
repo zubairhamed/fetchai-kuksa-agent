@@ -46,12 +46,13 @@ class SdvLinkRemoteGetRequest(Model):
 class SdvLinkResponse(Model):
     success: bool
 
-DRIVER_ID = "ABC123"
-API_KEY = "f00bca33-afca-4e93-bb71-d55a5c1fe37e"
+DRIVER_ID = "ZUBAIRCAR"
+API_KEY = "5823c653-1696-4125-aacc-dcd97dfbd195"
+AGENTVERSE_AGENT_ADDRESS = "agent1q0k8w9k0dszq49s73ljww3u7mmf2xkpfsszdumaymugp9zm7nvme7jf2sf8"
+
 AGENT_NAME="sdvlink"
 SEED_PHRASE="secret seed phrase"
 MAILBOX_STR=f"{API_KEY}@https://agentverse.ai/"
-AGENTVERSE_AGENT_ADDRESS = "agent1q0k8w9k0dszq49s73ljww3u7mmf2xkpfsszdumaymugp9zm7nvme7jf2sf8"
 DATABROKER_ADDRESS = "localhost"
 DATABROKER_PORT = 55555
 
@@ -62,7 +63,7 @@ sdvlink = Agent(
 )
  
 fund_agent_if_low(sdvlink.wallet.address())
-vssClient = VSSClient(DATABROKER_ADDRESS, DATABROKER_PORT) 
+vssClient = VSSClient(DATABROKER_ADDRESS, DATABROKER_PORT)
 
 @sdvlink.on_event("startup")
 async def startup(ctx: Context):
