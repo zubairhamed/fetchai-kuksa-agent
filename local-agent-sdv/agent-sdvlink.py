@@ -46,9 +46,9 @@ class SdvLinkRemoteGetRequest(Model):
 class SdvLinkResponse(Model):
     success: bool
 
-DRIVER_ID = "ZUBAIRCAR"
-API_KEY = "5823c653-1696-4125-aacc-dcd97dfbd195"
-AGENTVERSE_AGENT_ADDRESS = "agent1q0k8w9k0dszq49s73ljww3u7mmf2xkpfsszdumaymugp9zm7nvme7jf2sf8"
+DRIVER_ID = "REPLACE_ME"
+API_KEY = "REPLACE_ME"
+AGENTVERSE_AGENT_ADDRESS = "REPLACE_ME"
 
 AGENT_NAME="sdvlink"
 SEED_PHRASE="secret seed phrase"
